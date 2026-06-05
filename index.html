@@ -7,150 +7,72 @@
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #0d1117;
-      color: #e6edf3;
-      padding: 32px;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
-    header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #58a6ff;
-      letter-spacing: 1px;
-    }
-
-    header p {
-      color: #8b949e;
-      margin-top: 6px;
-      font-size: 0.95rem;
-    }
-
-    .diagram-wrapper {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 12px;
-      padding: 24px;
-      overflow-x: auto;
-      text-align: center;
-    }
-
-    .mermaid {
-      display: inline-block;
-      min-width: 900px;
-    }
-
-    /* ── Server table ── */
-    .table-section {
-      margin-top: 40px;
-    }
-
-    .table-section h2 {
-      font-size: 1.3rem;
-      color: #58a6ff;
-      margin-bottom: 16px;
-      border-bottom: 1px solid #30363d;
-      padding-bottom: 8px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
-      direction: ltr;
-    }
-
-    th {
-      background: #21262d;
-      color: #58a6ff;
-      padding: 10px 14px;
-      text-align: left;
-      border: 1px solid #30363d;
-    }
-
-    td {
-      padding: 9px 14px;
-      border: 1px solid #30363d;
-      color: #c9d1d9;
-    }
-
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0d1117; color: #e6edf3; padding: 24px; }
+    header { text-align: center; margin-bottom: 28px; }
+    header h1 { font-size: 2.2rem; font-weight: 700; color: #58a6ff; letter-spacing: 1px; }
+    header p { color: #8b949e; margin-top: 6px; font-size: 1rem; }
+    .zoom-bar { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+    .zoom-bar button { background: #21262d; color: #e6edf3; border: 1px solid #30363d; border-radius: 6px; padding: 7px 20px; font-size: 1.1rem; cursor: pointer; }
+    .zoom-bar button:hover { background: #30363d; }
+    .zoom-bar span { color: #8b949e; font-size: 0.9rem; min-width: 52px; text-align: center; }
+    .zoom-bar .sm { font-size: 0.85rem; padding: 7px 14px; }
+    .diagram-outer { background: #161b22; border: 1px solid #30363d; border-radius: 12px; overflow: auto; cursor: grab; max-height: 80vh; }
+    .diagram-outer:active { cursor: grabbing; }
+    .diagram-inner { display: inline-block; transform-origin: top left; padding: 40px 50px; }
+    .section { margin-top: 40px; }
+    .section h2 { font-size: 1.35rem; color: #58a6ff; margin-bottom: 16px; border-bottom: 1px solid #30363d; padding-bottom: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.92rem; direction: ltr; }
+    th { background: #21262d; color: #58a6ff; padding: 11px 16px; text-align: left; border: 1px solid #30363d; }
+    td { padding: 10px 16px; border: 1px solid #30363d; color: #c9d1d9; }
     tr:nth-child(even) td { background: #161b22; }
     tr:nth-child(odd)  td { background: #0d1117; }
-
-    .tag {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
+    .tag { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 0.78rem; font-weight: 700; }
     .tag-go   { background:#1f4d2e; color:#56d364; }
     .tag-web  { background:#1a3a6b; color:#58a6ff; }
     .tag-sync { background:#4d3800; color:#f0b429; }
     .tag-odin { background:#4d1a1a; color:#f47067; }
     .tag-vault{ background:#2a1a4d; color:#bc8cff; }
-
-    /* ── Flows ── */
-    .flows {
-      margin-top: 40px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
-      direction: rtl;
-    }
-
-    .flow-card {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 8px;
-      padding: 16px;
-    }
-
-    .flow-card h3 {
-      font-size: 0.95rem;
-      color: #58a6ff;
-      margin-bottom: 8px;
-    }
-
-    .flow-card ol {
-      padding-right: 18px;
-      font-size: 0.84rem;
-      color: #8b949e;
-      line-height: 1.7;
-    }
-
-    /* ── Print ── */
+    .flows { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; direction: rtl; }
+    .flow-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 18px; }
+    .flow-card h3 { font-size: 1rem; color: #58a6ff; margin-bottom: 10px; }
+    .flow-card ol { padding-right: 20px; font-size: 0.88rem; color: #8b949e; line-height: 1.8; }
+    footer { text-align: center; margin-top: 40px; color: #484f58; font-size: 0.82rem; direction: ltr; }
+    footer a { color: #58a6ff; }
     @media print {
-      body { background: #fff; color: #000; padding: 16px; }
-      header h1 { color: #1a4d8f; }
-      .diagram-wrapper { background: #fff; border: 1px solid #ccc; }
-      th { background: #e8f0fe; color: #1a4d8f; }
-      td { color: #333; }
-      tr:nth-child(even) td { background: #f8f9fa; }
-      tr:nth-child(odd)  td { background: #fff; }
-      .flow-card { background: #f8f9fa; border: 1px solid #ccc; }
-      .flow-card h3 { color: #1a4d8f; }
-      .flow-card ol { color: #333; }
+      body { background:#fff; color:#000; }
+      .zoom-bar { display:none; }
+      .diagram-outer { max-height:none; overflow:visible; background:#fff; border:1px solid #ccc; }
+      .diagram-inner { transform:none !important; padding:0; }
+      .diagram-inner svg { min-width:100% !important; width:100% !important; }
+      th { background:#e8f0fe; color:#1a4d8f; }
+      td { color:#333; }
+      tr:nth-child(even) td { background:#f8f9fa; }
+      tr:nth-child(odd)  td { background:#fff; }
+      .flow-card { background:#f8f9fa; border:1px solid #ccc; }
+      .flow-card h3 { color:#1a4d8f; }
+      .flow-card ol { color:#333; }
     }
   </style>
 </head>
 <body>
-
 <header>
   <h1>ארכיטקטורת מערכת Tazo</h1>
   <p>5 שרתים · מיקרו-שירותים · KYC · ארנק פנימי · WhatsApp · AI</p>
 </header>
 
-<div class="diagram-wrapper">
-  <div class="mermaid">
-%%{init: {"theme": "dark", "themeVariables": {"fontSize": "13px"}} }%%
+<div class="zoom-bar">
+  <button onclick="zoom(-0.2)">−</button>
+  <span id="zoom-label">100%</span>
+  <button onclick="zoom(+0.2)">+</button>
+  <button class="sm" onclick="resetZoom()">איפוס גודל</button>
+  <button class="sm" onclick="fitToScreen()">התאם למסך</button>
+  <button class="sm" onclick="window.print()">🖨️ הדפסה</button>
+</div>
+
+<div class="diagram-outer" id="diagramOuter">
+  <div class="diagram-inner" id="diagramInner">
+    <div class="mermaid" id="theMermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "22px", "primaryColor": "#1e3a5f", "primaryTextColor": "#e6edf3", "primaryBorderColor": "#4a9eff", "lineColor": "#8b949e", "secondaryColor": "#161b22", "tertiaryColor": "#0d1117", "edgeLabelBackground": "#1a1f27", "clusterBkg": "#161b22"}, "flowchart": {"curve": "basis", "padding": 30, "nodeSpacing": 70, "rankSpacing": 90}} }%%
 graph TB
     subgraph USERS["👥 משתמשים"]
         PASSENGER["נוסע"]
@@ -158,7 +80,6 @@ graph TB
         BUSINESS["בעל עסק"]
         ADMIN_USER["מנהל מערכת"]
     end
-
     subgraph S4["🔐 SERVER 4 — ODIN  |  tazo-app.com  |  187.127.229.152"]
         ODIN_API["FastAPI — Admin Server\nauth · KYC · events · admin · landing\nmagic-link · privacy · legal · pwa"]
         ODIN_DB[("PostgreSQL\nusers · accounts · kyc_applications")]
@@ -169,7 +90,6 @@ graph TB
         ODIN_API --- ODIN_REDIS
         ODIN_TRAEFIK --> ODIN_API
     end
-
     subgraph S1["🚗 SERVER 1 — TAZO-GO  |  tazo-go.com  |  187.124.223.253"]
         GO_API["FastAPI — RideOS Backend\nrides · rideshare · drivers · passengers\nvehicle · KYC · payments · tracking\nratings · WhatsApp · webhooks"]
         GO_PASSENGER_SPA["Nginx — Passenger SPA :8002"]
@@ -181,7 +101,6 @@ graph TB
         GO_API --- GO_REDIS
         GO_WORKER --- GO_DB
     end
-
     subgraph S2["🌐 SERVER 2 — TAZO-WEB  |  tazo-web.com  |  76.13.48.23"]
         WEB_API["FastAPI — LocalBiz AutoSite\nauth · businesses · sites · AI agents\npayments · WhatsApp · workers"]
         WEB_ADMIN_SPA["Nginx — Admin SPA :5173"]
@@ -192,7 +111,6 @@ graph TB
         WEB_API --- WEB_DB
         WEB_API --- WEB_EVOLUTION
     end
-
     subgraph S3["🔄 SERVER 3 — TAZO-SYNC  |  tazo-sync.com  |  145.223.81.124"]
         SYNC_API["Node.js — Sync Service\nreal-time dispatch · driver assignment\nride events · notifications"]
         SYNC_DB[("MongoDB\nevents · assignments")]
@@ -200,13 +118,11 @@ graph TB
         SYNC_API --- SYNC_DB
         SYNC_NGINX --> SYNC_API
     end
-
     subgraph S5["🏦 SERVER 5 — VAULT  |  internal  |  76.13.42.13"]
         VAULT_API["FastAPI — Bridge\nTaz-token Ledger\nPOST /wallets/create\nPOST /admin/mint\nGET /wallets/balance"]
         VAULT_DB[("PostgreSQL\nwallets · transactions · treasury")]
         VAULT_API --- VAULT_DB
     end
-
     subgraph EXT["☁️ שירותים חיצוניים"]
         PERSONA["🪪 Persona KYC\napp.withpersona.com"]
         META_WA["📱 Meta WhatsApp\nCloud API"]
@@ -217,188 +133,129 @@ graph TB
         LLM["🤖 LLMs\nOpenAI · Anthropic · Gemini\nGrok · Deepseek"]
         GOOGLE_OAUTH["🔑 Google OAuth"]
     end
-
     DRIVER -->|"register / KYC / WhatsApp OTP"| ODIN_TRAEFIK
     PASSENGER -->|"register / login"| ODIN_TRAEFIK
     ADMIN_USER -->|"admin panel"| ODIN_TRAEFIK
     BUSINESS -->|"sign up / dashboard"| WEB_ADMIN_SPA
-
     ODIN_KEYS -.->|"RS256 public key — validates Bearer tokens"| GO_API
     ODIN_KEYS -.->|"RS256 public key — validates Bearer tokens"| WEB_API
-
     ODIN_API -->|"POST /webhooks/odin\ndriver approved / rejected"| GO_API
     ODIN_API -->|"POST /webhooks/odin\nevents"| WEB_API
-
     GO_API -->|"X-Vault-Internal-Key\nPOST /wallets/create"| VAULT_API
     ODIN_API -->|"X-Vault-Internal-Key\nwallet creation"| VAULT_API
-
     GO_API -->|"X-Internal-Key\ndriver assignment events"| SYNC_API
-
     PASSENGER -->|"rides · tracking · payments"| GO_PASSENGER_SPA
     DRIVER -->|"jobs · navigation · earnings"| GO_DRIVER_SPA
     GO_PASSENGER_SPA --> GO_API
     GO_DRIVER_SPA --> GO_API
-
     ODIN_API <-->|"KYC webhook + API"| PERSONA
     GO_API <-->|"KYC"| PERSONA
-
     ODIN_API <-->|"OTP · flow messages"| META_WA
     ODIN_API <-->|"backup"| TWILIO
     GO_API <-->|"onboarding flow"| META_WA
     SYNC_API <-->|"dispatch alerts"| META_WA
     SYNC_API <-->|"backup"| TWILIO
-
     WEB_API <-->|"invoices"| GREEN_INV
     WEB_API <-->|"payment links"| MORNING
     SYNC_API <-->|"invoices"| GREEN_INV
-
     WEB_API <-->|"AI agents · content gen"| LLM
     SYNC_API <-->|"AI dispatch"| LLM
     WEB_API <-->|"location data"| GOOGLE_MAPS
     SYNC_API <-->|"routing"| GOOGLE_MAPS
     WEB_API <-->|"SSO"| GOOGLE_OAUTH
+    </div>
   </div>
 </div>
 
-<!-- ── Server table ── -->
-<div class="table-section">
+<div class="section">
   <h2>📋 טבלת שרתים</h2>
   <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>שרת</th>
-        <th>Domain</th>
-        <th>IP</th>
-        <th>Tech Stack</th>
-        <th>תפקיד</th>
-      </tr>
-    </thead>
+    <thead><tr><th>#</th><th>שרת</th><th>Domain</th><th>IP</th><th>Tech Stack</th><th>תפקיד</th></tr></thead>
     <tbody>
-      <tr>
-        <td><span class="tag tag-go">S1</span></td>
-        <td>ATRAIZEOLG-O</td>
-        <td>tazo-go.com</td>
-        <td>187.124.223.253</td>
-        <td>Python/FastAPI · PostgreSQL · Redis · Nginx</td>
-        <td>פלטפורמת נסיעות — נוסעים + נהגים</td>
-      </tr>
-      <tr>
-        <td><span class="tag tag-web">S2</span></td>
-        <td>TAARZIOEWLE-B</td>
-        <td>tazo-web.com</td>
-        <td>76.13.48.23</td>
-        <td>Python/FastAPI · PostgreSQL · Evolution API</td>
-        <td>LocalBiz AutoSite — בונה אתרים לעסקים עם AI</td>
-      </tr>
-      <tr>
-        <td><span class="tag tag-sync">S3</span></td>
-        <td>TAARZIOESLY-NC</td>
-        <td>tazo-sync.com</td>
-        <td>145.223.81.124</td>
-        <td>Node.js · MongoDB · Nginx</td>
-        <td>Sync/Dispatch — הקצאת נהגים + התראות real-time</td>
-      </tr>
-      <tr>
-        <td><span class="tag tag-odin">S4</span></td>
-        <td>AORDIIENL (Odin)</td>
-        <td>tazo-app.com</td>
-        <td>187.127.229.152</td>
-        <td>Python/FastAPI · PostgreSQL · Redis · Traefik</td>
-        <td>Auth Gateway + KYC — מרכז הזהויות</td>
-      </tr>
-      <tr>
-        <td><span class="tag tag-vault">S5</span></td>
-        <td>AVRAIUELLT</td>
-        <td>vault (internal)</td>
-        <td>76.13.42.13</td>
-        <td>Python/FastAPI · PostgreSQL</td>
-        <td>Taz-token Ledger — ארנק פנימי לנהגים</td>
-      </tr>
+      <tr><td><span class="tag tag-go">S1</span></td><td>ATRAIZEOLG-O</td><td>tazo-go.com</td><td>187.124.223.253</td><td>Python/FastAPI · PostgreSQL · Redis · Nginx</td><td>פלטפורמת נסיעות — נוסעים + נהגים</td></tr>
+      <tr><td><span class="tag tag-web">S2</span></td><td>TAARZIOEWLE-B</td><td>tazo-web.com</td><td>76.13.48.23</td><td>Python/FastAPI · PostgreSQL · Evolution API</td><td>LocalBiz AutoSite — בונה אתרים לעסקים עם AI</td></tr>
+      <tr><td><span class="tag tag-sync">S3</span></td><td>TAARZIOESLY-NC</td><td>tazo-sync.com</td><td>145.223.81.124</td><td>Node.js · MongoDB · Nginx</td><td>Sync/Dispatch — הקצאת נהגים + התראות real-time</td></tr>
+      <tr><td><span class="tag tag-odin">S4</span></td><td>AORDIIENL (Odin)</td><td>tazo-app.com</td><td>187.127.229.152</td><td>Python/FastAPI · PostgreSQL · Redis · Traefik</td><td>Auth Gateway + KYC — מרכז הזהויות</td></tr>
+      <tr><td><span class="tag tag-vault">S5</span></td><td>AVRAIUELLT</td><td>vault (internal)</td><td>76.13.42.13</td><td>Python/FastAPI · PostgreSQL</td><td>Taz-token Ledger — ארנק פנימי לנהגים</td></tr>
     </tbody>
   </table>
 </div>
 
-<!-- ── Flows ── -->
-<div class="table-section">
+<div class="section">
   <h2>🔁 זרימות מרכזיות</h2>
   <div class="flows">
-    <div class="flow-card">
-      <h3>KYC / אימות נהג</h3>
-      <ol>
-        <li>נהג מתחבר → Odin (S4)</li>
-        <li>Odin שולח ל-Persona (app.withpersona.com)</li>
-        <li>Persona מחזיר Webhook עם תוצאת אימות</li>
-        <li>Odin שולח POST /webhooks/odin → S1 ו-S2</li>
-      </ol>
-    </div>
-    <div class="flow-card">
-      <h3>JWT Auth</h3>
-      <ol>
-        <li>Odin מנפיק RS256 JWT token</li>
-        <li>S1 ו-S2 מאמתים עם המפתח הציבורי</li>
-        <li>אין צורך לגעת ב-S4 לכל בקשה</li>
-      </ol>
-    </div>
-    <div class="flow-card">
-      <h3>Vault — ארנק Taz</h3>
-      <ol>
-        <li>אחרי אישור KYC → S4 ו-S1</li>
-        <li>שולחים POST /wallets/create ל-S5</li>
-        <li>S5 יוצר ארנק עם X-Vault-Internal-Key</li>
-        <li>Background worker ב-S1 מנסה שוב אם נכשל</li>
-      </ol>
-    </div>
-    <div class="flow-card">
-      <h3>Dispatch נסיעה</h3>
-      <ol>
-        <li>נוסע מזמין נסיעה → S1</li>
-        <li>S1 שולח event הקצאה → S3</li>
-        <li>S3 מפיץ לנהגים דרך Meta WhatsApp</li>
-        <li>נהג מאשר → S3 → S1</li>
-      </ol>
-    </div>
-    <div class="flow-card">
-      <h3>LocalBiz — יצירת אתר</h3>
-      <ol>
-        <li>עסק נרשם ב-tazo-web.com (S2)</li>
-        <li>AI agents (LLM) יוצרים תוכן + אתר</li>
-        <li>Google Maps לנתוני מיקום</li>
-        <li>Green Invoice / Morning לתשלום</li>
-      </ol>
-    </div>
-    <div class="flow-card">
-      <h3>WhatsApp Onboarding</h3>
-      <ol>
-        <li>נהג שולח הודעה למספר העסקי</li>
-        <li>Odin (S4) מקבל Webhook מ-Meta</li>
-        <li>שולח OTP ומדריך את הנהג דרך KYC</li>
-        <li>Twilio כגיבוי אם Meta לא זמין</li>
-      </ol>
-    </div>
+    <div class="flow-card"><h3>KYC / אימות נהג</h3><ol><li>נהג מתחבר → Odin (S4)</li><li>Odin שולח ל-Persona (app.withpersona.com)</li><li>Persona מחזיר Webhook עם תוצאת אימות</li><li>Odin שולח POST /webhooks/odin → S1 ו-S2</li></ol></div>
+    <div class="flow-card"><h3>JWT Auth</h3><ol><li>Odin מנפיק RS256 JWT token</li><li>S1 ו-S2 מאמתים עם המפתח הציבורי</li><li>אין צורך לגעת ב-S4 לכל בקשה</li></ol></div>
+    <div class="flow-card"><h3>Vault — ארנק Taz</h3><ol><li>אחרי אישור KYC → S4 ו-S1</li><li>שולחים POST /wallets/create ל-S5</li><li>S5 יוצר ארנק עם X-Vault-Internal-Key</li><li>Background worker ב-S1 מנסה שוב אם נכשל</li></ol></div>
+    <div class="flow-card"><h3>Dispatch נסיעה</h3><ol><li>נוסע מזמין נסיעה → S1</li><li>S1 שולח event הקצאה → S3</li><li>S3 מפיץ לנהגים דרך Meta WhatsApp</li><li>נהג מאשר → S3 → S1</li></ol></div>
+    <div class="flow-card"><h3>LocalBiz — יצירת אתר</h3><ol><li>עסק נרשם ב-tazo-web.com (S2)</li><li>AI agents (LLM) יוצרים תוכן + אתר</li><li>Google Maps לנתוני מיקום</li><li>Green Invoice / Morning לתשלום</li></ol></div>
+    <div class="flow-card"><h3>WhatsApp Onboarding</h3><ol><li>נהג שולח הודעה למספר העסקי</li><li>Odin (S4) מקבל Webhook מ-Meta</li><li>שולח OTP ומדריך את הנהג דרך KYC</li><li>Twilio כגיבוי אם Meta לא זמין</li></ol></div>
   </div>
 </div>
 
-<footer style="text-align:center; margin-top:40px; color:#484f58; font-size:0.8rem; direction:ltr;">
-  Generated: June 2026 &nbsp;|&nbsp; Tazo Platform Architecture &nbsp;|&nbsp; KYC: <a href="https://app.withpersona.com" style="color:#58a6ff;">app.withpersona.com</a>
-</footer>
+<footer>Generated: June 2026 &nbsp;|&nbsp; Tazo Platform Architecture &nbsp;|&nbsp; KYC: <a href="https://app.withpersona.com" target="_blank">app.withpersona.com</a></footer>
 
 <script>
-  mermaid.initialize({
-    startOnLoad: true,
-    theme: 'dark',
-    flowchart: { curve: 'basis', padding: 20 },
-    themeVariables: {
-      primaryColor: '#1e3a5f',
-      primaryTextColor: '#e6edf3',
-      primaryBorderColor: '#4a9eff',
-      lineColor: '#8b949e',
-      secondaryColor: '#161b22',
-      tertiaryColor: '#0d1117',
-      edgeLabelBackground: '#161b22',
-      fontSize: '13px'
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'dark',
+  flowchart: { curve: 'basis', padding: 30, nodeSpacing: 70, rankSpacing: 90 },
+  themeVariables: {
+    fontSize: '22px',
+    primaryColor: '#1e3a5f',
+    primaryTextColor: '#e6edf3',
+    primaryBorderColor: '#4a9eff',
+    lineColor: '#8b949e',
+    secondaryColor: '#161b22',
+    tertiaryColor: '#0d1117',
+    edgeLabelBackground: '#1a1f27',
+    clusterBkg: '#161b22'
+  }
+});
+
+// After mermaid renders, force large SVG
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const svg = document.querySelector('#theMermaid svg');
+    if (svg) {
+      svg.removeAttribute('width');
+      svg.removeAttribute('height');
+      svg.style.minWidth = '2200px';
+      svg.style.fontSize = '22px';
     }
-  });
+    fitToScreen();
+  }, 1800);
+});
+
+let scale = 1.0;
+const inner = document.getElementById('diagramInner');
+const outer = document.getElementById('diagramOuter');
+const lbl   = document.getElementById('zoom-label');
+
+function applyZoom() {
+  inner.style.transform = `scale(${scale})`;
+  lbl.textContent = Math.round(scale * 100) + '%';
+}
+function zoom(d) { scale = Math.min(3, Math.max(0.2, scale + d)); applyZoom(); }
+function resetZoom() { scale = 1.0; applyZoom(); }
+function fitToScreen() {
+  const svg = document.querySelector('#theMermaid svg');
+  if (!svg) return;
+  const svgW = svg.getBoundingClientRect().width || 2200;
+  const outerW = outer.clientWidth - 80;
+  scale = Math.min(1.0, outerW / svgW);
+  applyZoom();
+}
+
+// drag to pan
+let drag = false, sx, sy, sl, st;
+outer.addEventListener('mousedown', e => { drag=true; sx=e.pageX-outer.offsetLeft; sy=e.pageY-outer.offsetTop; sl=outer.scrollLeft; st=outer.scrollTop; });
+outer.addEventListener('mouseleave', ()=> drag=false);
+outer.addEventListener('mouseup',    ()=> drag=false);
+outer.addEventListener('mousemove', e => { if(!drag) return; e.preventDefault(); outer.scrollLeft=sl-(e.pageX-outer.offsetLeft-sx); outer.scrollTop=st-(e.pageY-outer.offsetTop-sy); });
+
+// ctrl+scroll zoom
+outer.addEventListener('wheel', e => { if(e.ctrlKey||e.metaKey){ e.preventDefault(); zoom(e.deltaY<0?0.1:-0.1); } }, {passive:false});
 </script>
 </body>
 </html>
