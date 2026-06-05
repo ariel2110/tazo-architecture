@@ -38,19 +38,47 @@
     .flow-card ol { padding-right: 20px; font-size: 0.88rem; color: #8b949e; line-height: 1.8; }
     footer { text-align: center; margin-top: 40px; color: #484f58; font-size: 0.82rem; direction: ltr; }
     footer a { color: #58a6ff; }
+    @page { size: A3 landscape; margin: 10mm; }
     @media print {
-      body { background:#fff; color:#000; }
-      .zoom-bar { display:none; }
-      .diagram-outer { max-height:none; overflow:visible; background:#fff; border:1px solid #ccc; }
-      .diagram-inner { transform:none !important; padding:0; }
-      .diagram-inner svg { min-width:100% !important; width:100% !important; }
-      th { background:#e8f0fe; color:#1a4d8f; }
-      td { color:#333; }
-      tr:nth-child(even) td { background:#f8f9fa; }
-      tr:nth-child(odd)  td { background:#fff; }
-      .flow-card { background:#f8f9fa; border:1px solid #ccc; }
-      .flow-card h3 { color:#1a4d8f; }
-      .flow-card ol { color:#333; }
+      body { background:#fff !important; color:#000 !important; padding: 0; }
+      header h1 { color:#1a4d8f !important; }
+      header p  { color:#555 !important; }
+      .zoom-bar { display:none !important; }
+
+      /* Diagram: fill the full A3 landscape page */
+      .diagram-outer {
+        max-height: none !important;
+        overflow: visible !important;
+        background: #fff !important;
+        border: 1px solid #ccc !important;
+        width: 100% !important;
+        page-break-after: always;
+      }
+      .diagram-inner {
+        transform: none !important;
+        padding: 0 !important;
+        width: 100% !important;
+      }
+      /* Let the SVG fill full print width */
+      .diagram-inner svg,
+      #theMermaid svg {
+        min-width: unset !important;
+        width: 100% !important;
+        height: auto !important;
+        max-width: 100% !important;
+      }
+
+      /* Table + cards on next page */
+      .section { page-break-before: auto; }
+      th { background:#e8f0fe !important; color:#1a4d8f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      td { color:#333 !important; }
+      tr:nth-child(even) td { background:#f8f9fa !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      tr:nth-child(odd)  td { background:#fff !important; }
+      .flow-card { background:#f8f9fa !important; border:1px solid #ccc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .flow-card h3 { color:#1a4d8f !important; }
+      .flow-card ol { color:#333 !important; }
+      footer { color:#555 !important; }
+      footer a { color:#1a4d8f !important; }
     }
   </style>
 </head>
@@ -66,7 +94,7 @@
   <button onclick="zoom(+0.2)">+</button>
   <button class="sm" onclick="resetZoom()">איפוס גודל</button>
   <button class="sm" onclick="fitToScreen()">התאם למסך</button>
-  <button class="sm" onclick="window.print()">🖨️ הדפסה</button>
+  <button class="sm" onclick="printDiagram()">🖨️ הדפסה</button>
 </div>
 
 <div class="diagram-outer" id="diagramOuter">
@@ -253,6 +281,21 @@ outer.addEventListener('mousedown', e => { drag=true; sx=e.pageX-outer.offsetLef
 outer.addEventListener('mouseleave', ()=> drag=false);
 outer.addEventListener('mouseup',    ()=> drag=false);
 outer.addEventListener('mousemove', e => { if(!drag) return; e.preventDefault(); outer.scrollLeft=sl-(e.pageX-outer.offsetLeft-sx); outer.scrollTop=st-(e.pageY-outer.offsetTop-sy); });
+
+function printDiagram() {
+  // Before printing: remove transform so browser renders SVG at natural size
+  const savedScale = scale;
+  inner.style.transform = 'none';
+  inner.style.padding = '0';
+  setTimeout(() => {
+    window.print();
+    // Restore after print dialog closes
+    setTimeout(() => {
+      inner.style.transform = `scale(${savedScale})`;
+      inner.style.padding = '40px 50px';
+    }, 500);
+  }, 100);
+}
 
 // ctrl+scroll zoom
 outer.addEventListener('wheel', e => { if(e.ctrlKey||e.metaKey){ e.preventDefault(); zoom(e.deltaY<0?0.1:-0.1); } }, {passive:false});
