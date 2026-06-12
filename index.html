@@ -314,6 +314,36 @@
       color: var(--muted);
       margin-bottom: 16px;
     }
+    .site-links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+      text-align: right;
+    }
+    .site-link {
+      border: 1px solid var(--line);
+      background: #1a1f29;
+      border-radius: 12px;
+      padding: 12px 14px;
+      transition: 0.2s ease;
+      display: block;
+    }
+    .site-link:hover {
+      border-color: #49556a;
+      background: #212735;
+    }
+    .site-link strong {
+      display: block;
+      color: #f5f8ff;
+      margin-bottom: 3px;
+    }
+    .site-link span {
+      color: #b8c3d5;
+      font-size: 0.88rem;
+      direction: ltr;
+      display: inline-block;
+    }
 
     footer {
       border-top: 1px solid rgba(255,255,255,0.06);
@@ -343,6 +373,7 @@
       .hero { padding-top: 54px; }
       .steps { grid-template-columns: 1fr; }
       .stats-grid { grid-template-columns: 1fr; }
+      .site-links { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -488,9 +519,26 @@
 
     <section class="bottom-cta" id="join">
       <div class="container">
-        <h2>רוצה להצטרף ל-TAZO?</h2>
-        <p>נשמח להעלות אותך לאוויר במהירות עם תהליך פשוט וברור.</p>
-        <a class="btn btn-primary" href="/deep-dive.html">כניסה למערכת</a>
+        <h2>קישורים לאתרים של המערכת</h2>
+        <p>אפשר להיכנס ישירות לכל אתר לפי השירות המתאים:</p>
+        <div class="site-links">
+          <a class="site-link" href="https://tazo-go.com" target="_blank" rel="noopener noreferrer">
+            <strong>TAZO GO</strong>
+            <span>https://tazo-go.com</span>
+          </a>
+          <a class="site-link" href="https://tazo-web.com" target="_blank" rel="noopener noreferrer">
+            <strong>TAZO WEB</strong>
+            <span>https://tazo-web.com</span>
+          </a>
+          <a class="site-link" href="https://tazo-sync.com" target="_blank" rel="noopener noreferrer">
+            <strong>TAZO SYNC</strong>
+            <span>https://tazo-sync.com</span>
+          </a>
+          <a class="site-link" href="https://vault.com" target="_blank" rel="noopener noreferrer">
+            <strong>VAULT</strong>
+            <span>https://vault.com</span>
+          </a>
+        </div>
       </div>
     </section>
   </main>
@@ -498,7 +546,7 @@
   <footer>
     <div class="container foot">
       <span>TAZO Platform - דף נחיתה למשתמשים</span>
-      <a href="/deep-dive.html">לצפייה במידע טכני</a>
+      <a href="https://tazo-app.com" target="_blank" rel="noopener noreferrer">https://tazo-app.com</a>
     </div>
   </footer>
 </body>
