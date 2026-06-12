@@ -3,198 +3,503 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tazo Architecture - Overview</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <title>TAZO - פלטפורמת שירותים חכמה</title>
+  <style>
+    :root {
+      --bg: #0f1116;
+      --bg-soft: #171a22;
+      --panel: #1d212b;
+      --line: #2d3340;
+      --text: #eef1f6;
+      --muted: #a8b1c2;
+      --brand: #ffd400;
+      --brand-dark: #dcb600;
+      --ok: #38d39f;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: radial-gradient(circle at 18% 0%, #2a2510 0%, var(--bg) 34%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1120px, calc(100% - 28px)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(8px);
+      background: rgba(15, 17, 22, 0.84);
+    }
+    .topbar-inner {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .brand {
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+    }
+    .brand-dot { color: var(--brand); }
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .menu a {
+      color: var(--muted);
+      font-size: 0.92rem;
+      padding: 8px 12px;
+      border-radius: 999px;
+      transition: 0.2s ease;
+    }
+    .menu a:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .menu .cta-mini {
+      color: #111;
+      background: var(--brand);
+      font-weight: 700;
+    }
+    .menu .cta-mini:hover {
+      background: var(--brand-dark);
+      color: #111;
+    }
+
+    .hero {
+      padding: 78px 0 56px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255, 212, 0, 0.34);
+      background: rgba(255, 212, 0, 0.1);
+      color: #f6de64;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      padding: 7px 11px;
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 3.3rem);
+      line-height: 1.12;
+      margin-bottom: 12px;
+    }
+    .hero h1 strong { color: var(--brand); }
+    .hero p {
+      color: var(--muted);
+      font-size: 1.08rem;
+      max-width: 620px;
+      margin-bottom: 22px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: 0.2s ease;
+      display: inline-block;
+    }
+    .btn-primary {
+      background: var(--brand);
+      color: #111;
+    }
+    .btn-primary:hover { background: var(--brand-dark); }
+    .btn-ghost {
+      background: transparent;
+      border-color: rgba(255,255,255,0.18);
+      color: var(--text);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.05); }
+    .hero-notes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .note {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 0.82rem;
+      color: #cdd5e2;
+    }
+
+    .hero-card {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #1a1e27 0%, #151922 100%);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .hero-card h3 {
+      color: #f2f6ff;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+    .hero-card ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+    .hero-card li {
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      gap: 9px;
+      align-items: start;
+      color: #ced6e3;
+      font-size: 0.9rem;
+    }
+    .hero-card .ok {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(56,211,159,0.16);
+      color: var(--ok);
+      font-weight: 800;
+    }
+
+    .stats {
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .stat {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      background: rgba(255,255,255,0.02);
+    }
+    .stat strong {
+      display: block;
+      color: var(--brand);
+      font-size: 1.7rem;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .stat span {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .section {
+      padding: 56px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .section h2 {
+      font-size: clamp(1.5rem, 2.7vw, 2.2rem);
+      margin-bottom: 10px;
+    }
+    .section .lead {
+      color: var(--muted);
+      margin-bottom: 22px;
+      max-width: 760px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .card h3 {
+      margin-bottom: 9px;
+      color: #f0f4fd;
+    }
+    .card p {
+      color: #b8c1d0;
+      font-size: 0.92rem;
+      margin-bottom: 10px;
+    }
+    .card ul {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      color: #d6deea;
+      font-size: 0.87rem;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 15px;
+      background: #191e28;
+    }
+    .step .n {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,212,0,0.14);
+      color: var(--brand);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .step h4 {
+      margin-bottom: 6px;
+      color: #edf3ff;
+    }
+    .step p {
+      color: #b8c1cf;
+      font-size: 0.89rem;
+    }
+
+    .faq {
+      display: grid;
+      gap: 10px;
+    }
+    .faq-item {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      background: #181d26;
+    }
+    .faq-item h4 {
+      margin-bottom: 6px;
+      color: #f4f8ff;
+    }
+    .faq-item p {
+      color: #b9c3d2;
+      font-size: 0.92rem;
+    }
+
+    .bottom-cta {
+      padding: 58px 0 66px;
+      text-align: center;
+    }
+    .bottom-cta h2 { margin-bottom: 10px; }
+    .bottom-cta p {
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 14px 0 22px;
+      color: #9ba6b8;
+      font-size: 0.84rem;
+    }
+    .foot {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .foot a { color: #c5cfde; }
+
+    @media (max-width: 980px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      .topbar-inner { padding: 9px 0; }
+      .menu { gap: 4px; }
+      .menu a { font-size: 0.83rem; padding: 7px 9px; }
+      .hero { padding-top: 54px; }
+      .steps { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-<header>
-  <h1 data-he="ארכיטקטורת מערכת Tazo" data-en="Tazo Platform Architecture">ארכיטקטורת מערכת Tazo</h1>
-  <p data-he="עמוד Overview: תרשים, שרתים, זרימות ומודולים" data-en="Overview page: diagram, servers, flows, and modules">עמוד Overview: תרשים, שרתים, זרימות ומודולים</p>
-</header>
-
-<div class="top-actions">
-  <nav class="page-links">
-    <a class="pill active" href="index.html" data-he="Overview" data-en="Overview">Overview</a>
-    <a class="pill" href="deep-dive.html" data-he="Deep Dive" data-en="Deep Dive">Deep Dive</a>
-  </nav>
-  <nav class="anchor-menu">
-    <a class="pill" href="#diagram" data-he="תרשים" data-en="Diagram">תרשים</a>
-    <a class="pill" href="#servers" data-he="שרתים" data-en="Servers">שרתים</a>
-    <a class="pill" href="#flows" data-he="זרימות" data-en="Flows">זרימות</a>
-    <a class="pill" href="#catalog" data-he="מודולים" data-en="Modules">מודולים</a>
-  </nav>
-  <button class="btn" id="langToggle">EN</button>
-</div>
-
-<div class="tools-row">
-  <input
-    id="freeSearch"
-    class="search"
-    data-he-placeholder="חיפוש חופשי על כל המודולים והזרימות (למשל: wallet, kyc, dispatch)"
-    data-en-placeholder="Free search across all modules and flows (e.g. wallet, kyc, dispatch)"
-    placeholder="חיפוש חופשי על כל המודולים והזרימות (למשל: wallet, kyc, dispatch)"
-  />
-  <button class="btn" id="clearSearch" data-he="נקה חיפוש" data-en="Clear Search">נקה חיפוש</button>
-  <button class="btn" onclick="printDiagram()" data-he="הדפס" data-en="Print">הדפס</button>
-</div>
-
-<section class="category-strip">
-  <div class="category-buttons" id="categoryButtons">
-    <button class="cat-btn active" data-category="all"><span class="label" data-he="הכל" data-en="All">הכל</span> <span class="count" data-count-for="all"></span></button>
-    <button class="cat-btn" data-category="identity"><span class="label" data-he="זהויות ו-KYC" data-en="Identity & KYC">זהויות ו-KYC</span> <span class="count" data-count-for="identity"></span></button>
-    <button class="cat-btn" data-category="mobility"><span class="label" data-he="תחבורה ו-Dispatch" data-en="Mobility & Dispatch">תחבורה ו-Dispatch</span> <span class="count" data-count-for="mobility"></span></button>
-    <button class="cat-btn" data-category="commerce"><span class="label" data-he="עסקים ו-AI" data-en="Commerce & AI">עסקים ו-AI</span> <span class="count" data-count-for="commerce"></span></button>
-    <button class="cat-btn" data-category="wallet"><span class="label" data-he="ארנק ותשלומים" data-en="Wallet & Payments">ארנק ותשלומים</span> <span class="count" data-count-for="wallet"></span></button>
-    <button class="cat-btn" data-category="messaging"><span class="label" data-he="WhatsApp והודעות" data-en="WhatsApp & Messaging">WhatsApp והודעות</span> <span class="count" data-count-for="messaging"></span></button>
-    <button class="cat-btn" data-category="infra"><span class="label" data-he="תשתיות ואבטחה" data-en="Infra & Security">תשתיות ואבטחה</span> <span class="count" data-count-for="infra"></span></button>
-  </div>
-  <p class="muted-note" data-he="סינון לפי קטגוריה עובד יחד עם החיפוש החופשי." data-en="Category filtering works together with free search.">סינון לפי קטגוריה עובד יחד עם החיפוש החופשי.</p>
-</section>
-
-<section id="diagram" class="section">
-  <h2 data-he="תרשים מערכת" data-en="System Diagram">תרשים מערכת</h2>
-  <div class="zoom-bar">
-    <button onclick="zoom(-0.2)">-</button>
-    <span id="zoom-label">100%</span>
-    <button onclick="zoom(+0.2)">+</button>
-    <button onclick="resetZoom()" data-he="איפוס" data-en="Reset">איפוס</button>
-    <button onclick="fitToScreen()" data-he="התאם למסך" data-en="Fit to Screen">התאם למסך</button>
-  </div>
-  <div class="diagram-outer" id="diagramOuter">
-    <div class="diagram-inner" id="diagramInner">
-      <div class="mermaid" id="theMermaid">
-graph TB
-  USERS[Users] --> S4[Odin Identity]
-  USERS --> S1[RideOS]
-  BUSINESS[Business Owner] --> S2[LocalBiz]
-  S1 --> S3[Sync Dispatch]
-  S1 --> S5[Vault]
-  S4 --> S5
-  S4 <-->|KYC| PERSONA[Persona]
-  S1 <-->|Dispatch WA| META[Meta WhatsApp]
-  S2 --> LLM[AI Providers]
-  S2 --> PAY[Green Invoice + Morning]
-      </div>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="#top" class="brand"><span class="brand-dot">.</span>TAZO</a>
+      <nav class="menu">
+        <a href="#services">למי זה מתאים</a>
+        <a href="#how">איך זה עובד</a>
+        <a href="#faq">שאלות נפוצות</a>
+        <a class="cta-mini" href="#join">להתחיל עכשיו</a>
+      </nav>
     </div>
-  </div>
-</section>
+  </header>
 
-<section id="servers" class="section">
-  <h2 data-he="טבלת שרתים" data-en="Server Table">טבלת שרתים</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th data-he="שרת" data-en="Server">שרת</th>
-        <th>Domain</th>
-        <th>IP</th>
-        <th>Stack</th>
-        <th data-he="תפקיד" data-en="Role">תפקיד</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr data-search-item data-search-text="s1 atraizeolg-o tazo-go rides mobility dispatch wallet redis postgres nginx" data-categories="mobility,wallet,messaging,infra"><td><span class="tag tag-go">S1</span></td><td>ATRAIZEOLG-O</td><td>tazo-go.com</td><td>187.124.223.253</td><td>FastAPI, PostgreSQL, Redis</td><td data-he="פלטפורמת נסיעות" data-en="Ride Platform">פלטפורמת נסיעות</td></tr>
-      <tr data-search-item data-search-text="s2 taarzioewle-b tazo-web localbiz ai llm commerce websites" data-categories="commerce,messaging,wallet"><td><span class="tag tag-web">S2</span></td><td>TAARZIOEWLE-B</td><td>tazo-web.com</td><td>76.13.48.23</td><td>FastAPI, PostgreSQL</td><td data-he="בניית אתרי עסקים עם AI" data-en="AI Business Site Builder">בניית אתרי עסקים עם AI</td></tr>
-      <tr data-search-item data-search-text="s3 taarzioesly-nc tazo-sync sync dispatch assignment realtime mongodb" data-categories="mobility,messaging,commerce"><td><span class="tag tag-sync">S3</span></td><td>TAARZIOESLY-NC</td><td>tazo-sync.com</td><td>145.223.81.124</td><td>Node.js, MongoDB</td><td data-he="הקצאות נהגים והתראות" data-en="Driver Assignment and Alerts">הקצאות נהגים והתראות</td></tr>
-      <tr data-search-item data-search-text="s4 aordiienl odin tazo-app identity auth kyc rs256" data-categories="identity,messaging,infra,wallet"><td><span class="tag tag-odin">S4</span></td><td>AORDIIENL (Odin)</td><td>tazo-app.com</td><td>187.127.229.152</td><td>FastAPI, PostgreSQL, Redis</td><td data-he="Gateway זהויות ו-KYC" data-en="Identity and KYC Gateway">Gateway זהויות ו-KYC</td></tr>
-      <tr data-search-item data-search-text="s5 avraiuellt vault wallet ledger treasury mint balance" data-categories="wallet,infra"><td><span class="tag tag-vault">S5</span></td><td>AVRAIUELLT</td><td>vault (internal)</td><td>76.13.42.13</td><td>FastAPI, PostgreSQL</td><td data-he="ספר חשבונות ארנק פנימי" data-en="Internal Wallet Ledger">ספר חשבונות ארנק פנימי</td></tr>
-    </tbody>
-  </table>
-</section>
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">BETA מערכת חיה ופעילה</div>
+          <h1>ברוך הבא ל-<strong>TAZO</strong><br />הדרך הפשוטה לנהל נסיעות ושירותים</h1>
+          <p>
+            פלטפורמה אחת שמחברת נהגים, נוסעים ובעלי עסקים.
+            הרשמה מהירה, עבודה מסודרת, ותהליך ברור בלי כאב ראש טכני.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#join">אני רוצה להתחיל</a>
+            <a class="btn btn-ghost" href="#how">תראה לי איך זה עובד</a>
+          </div>
+          <div class="hero-notes">
+            <span class="note">WhatsApp Onboarding</span>
+            <span class="note">תהליך מאומת וזהות מאובטחת</span>
+            <span class="note">תמיכה במספר שירותים</span>
+          </div>
+        </div>
 
-<section id="flows" class="section">
-  <h2 data-he="זרימות מרכזיות" data-en="Core Flows">זרימות מרכזיות</h2>
-  <div class="flows">
-    <article class="flow-card" data-search-item data-search-text="kyc verification persona webhook driver" data-categories="identity,messaging">
-      <h3 data-he="KYC ואימות נהג" data-en="KYC Driver Verification">KYC ואימות נהג</h3>
-      <ol>
-        <li data-he="נהג מתחבר דרך Odin" data-en="Driver starts in Odin">נהג מתחבר דרך Odin</li>
-        <li data-he="שליחה ל-Persona" data-en="Sent to Persona">שליחה ל-Persona</li>
-        <li data-he="Webhook חוזר עם תוצאה" data-en="Webhook returns result">Webhook חוזר עם תוצאה</li>
-      </ol>
-    </article>
-    <article class="flow-card" data-search-item data-search-text="jwt auth rs256 token validation" data-categories="identity,infra">
-      <h3 data-he="JWT Auth" data-en="JWT Auth">JWT Auth</h3>
-      <ol>
-        <li data-he="Odin מנפיק טוקן" data-en="Odin issues token">Odin מנפיק טוקן</li>
-        <li data-he="S1/S2 מאמתים ציבורי" data-en="S1/S2 validate with public key">S1/S2 מאמתים ציבורי</li>
-      </ol>
-    </article>
-    <article class="flow-card" data-search-item data-search-text="vault wallet create retry worker" data-categories="wallet">
-      <h3 data-he="יצירת ארנק" data-en="Wallet Creation">יצירת ארנק</h3>
-      <ol>
-        <li data-he="אחרי KYC מאושר" data-en="After KYC approval">אחרי KYC מאושר</li>
-        <li data-he="POST /wallets/create" data-en="POST /wallets/create">POST /wallets/create</li>
-      </ol>
-    </article>
-    <article class="flow-card" data-search-item data-search-text="dispatch trip ride assignment whatsapp" data-categories="mobility,messaging">
-      <h3 data-he="Dispatch נסיעה" data-en="Ride Dispatch">Dispatch נסיעה</h3>
-      <ol>
-        <li data-he="S1 שולח אירוע ל-S3" data-en="S1 sends event to S3">S1 שולח אירוע ל-S3</li>
-        <li data-he="S3 מפיץ לנהגים" data-en="S3 broadcasts to drivers">S3 מפיץ לנהגים</li>
-      </ol>
-    </article>
-  </div>
-</section>
+        <aside class="hero-card">
+          <h3>מה מקבלים ב-TAZO</h3>
+          <ul>
+            <li><span class="ok">✓</span><span>הצטרפות מהירה עם הנחיות ברורות שלב-אחר-שלב</span></li>
+            <li><span class="ok">✓</span><span>תהליך אימות מסודר לשמירה על איכות ובטיחות</span></li>
+            <li><span class="ok">✓</span><span>מערכת אחת לניהול נסיעות, תקשורת ותשלומים</span></li>
+            <li><span class="ok">✓</span><span>זמינות מכל מכשיר, בלי התקנות מסובכות</span></li>
+          </ul>
+        </aside>
+      </div>
+    </section>
 
-<section id="catalog" class="section">
-  <h2 data-he="קטלוג מודולים" data-en="Module Catalog">קטלוג מודולים</h2>
-  <div class="catalog-grid">
-    <article class="catalog-card" data-search-item data-search-text="identity auth magic link sessions" data-categories="identity,infra">
-      <h3 data-he="Identity Core" data-en="Identity Core">Identity Core</h3>
-      <p data-he="כניסה, הרשאות, סשנים וטוקנים." data-en="Login, authorization, sessions, and tokens.">כניסה, הרשאות, סשנים וטוקנים.</p>
-      <ul><li>Auth API</li><li>Magic Link</li><li>Redis Sessions</li></ul>
-    </article>
-    <article class="catalog-card" data-search-item data-search-text="persona kyc webhook" data-categories="identity,messaging">
-      <h3 data-he="KYC Verification" data-en="KYC Verification">KYC Verification</h3>
-      <p data-he="אימות זהות נהג והפצת תוצאות." data-en="Driver identity verification and event distribution.">אימות זהות נהג והפצת תוצאות.</p>
-      <ul><li>Persona API</li><li>Webhook Relay</li></ul>
-    </article>
-    <article class="catalog-card" data-search-item data-search-text="rides trips gps tracking ratings" data-categories="mobility">
-      <h3 data-he="Ride Engine" data-en="Ride Engine">Ride Engine</h3>
-      <p data-he="ניהול נסיעות, מעקב ודירוגים." data-en="Trips, tracking, and ratings.">ניהול נסיעות, מעקב ודירוגים.</p>
-      <ul><li>Rides API</li><li>Tracking</li><li>Ratings</li></ul>
-    </article>
-    <article class="catalog-card" data-search-item data-search-text="localbiz ai sites llm" data-categories="commerce">
-      <h3 data-he="LocalBiz AI Builder" data-en="LocalBiz AI Builder">LocalBiz AI Builder</h3>
-      <p data-he="יצירת אתרי עסקים ותוכן עם AI." data-en="Generate business sites and content with AI.">יצירת אתרי עסקים ותוכן עם AI.</p>
-      <ul><li>Site Generator</li><li>LLM Agents</li></ul>
-    </article>
-    <article class="catalog-card" data-search-item data-search-text="wallet ledger mint treasury" data-categories="wallet,infra">
-      <h3 data-he="Taz Wallet Ledger" data-en="Taz Wallet Ledger">Taz Wallet Ledger</h3>
-      <p data-he="ניהול יתרות ותנועות ארנק." data-en="Wallet balances and transactions ledger.">ניהול יתרות ותנועות ארנק.</p>
-      <ul><li>Wallet Create</li><li>Mint</li><li>Balance</li></ul>
-    </article>
-    <article class="catalog-card" data-search-item data-search-text="whatsapp meta twilio bot" data-categories="messaging">
-      <h3 data-he="Messaging Fabric" data-en="Messaging Fabric">Messaging Fabric</h3>
-      <p data-he="Meta WhatsApp עם גיבוי Twilio." data-en="Meta WhatsApp with Twilio fallback.">Meta WhatsApp עם גיבוי Twilio.</p>
-      <ul><li>Meta Cloud API</li><li>Twilio Backup</li></ul>
-    </article>
-  </div>
-</section>
+    <section class="stats">
+      <div class="container stats-grid">
+        <div class="stat"><strong>24/7</strong><span>זמינות המערכת</span></div>
+        <div class="stat"><strong>מהיר</strong><span>התחלה בכמה דקות</span></div>
+        <div class="stat"><strong>מאובטח</strong><span>אימות משתמשים ובקרות</span></div>
+        <div class="stat"><strong>פשוט</strong><span>ממשק ברור לכולם</span></div>
+      </div>
+    </section>
 
-<footer>
-  <span data-he="Generated: June 2026 | Tazo Architecture" data-en="Generated: June 2026 | Tazo Architecture">Generated: June 2026 | Tazo Architecture</span>
-</footer>
+    <section class="section" id="services">
+      <div class="container">
+        <h2>למי הפלטפורמה מתאימה</h2>
+        <p class="lead">TAZO מותאמת לאנשים ועסקים שרוצים לעבוד בצורה חכמה יותר בלי להסתבך.</p>
+        <div class="cards">
+          <article class="card">
+            <h3>נהגים</h3>
+            <p>עבודה מסודרת עם תהליך הצטרפות ברור, אימות, וקבלת משימות בצורה פשוטה.</p>
+            <ul>
+              <li>הצטרפות מהירה דרך הטלפון</li>
+              <li>ניהול משימות ותזמון</li>
+              <li>מעקב סטטוס בזמן אמת</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>נוסעים</h3>
+            <p>חוויית הזמנה קלה ואמינה, עם תקשורת ברורה לאורך כל הדרך.</p>
+            <ul>
+              <li>הזמנה ידידותית ופשוטה</li>
+              <li>שקיפות בתהליך השירות</li>
+              <li>עדכונים והתראות שימושיות</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>בעלי עסקים</h3>
+            <p>כלי עבודה שמחבר בין תפעול, שירות לקוחות וניהול תזרים במקום אחד.</p>
+            <ul>
+              <li>ניהול שירותים ממקום אחד</li>
+              <li>שיפור יעילות תפעולית</li>
+              <li>התאמה לצמיחה עסקית</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
 
-<script>
-  mermaid.initialize({
-    startOnLoad: true,
-    theme: "dark",
-    flowchart: { curve: "basis", padding: 30, nodeSpacing: 65, rankSpacing: 85 },
-    themeVariables: {
-      fontSize: "20px",
-      primaryColor: "#1e3a5f",
-      primaryTextColor: "#e6edf3",
-      primaryBorderColor: "#4a9eff",
-      lineColor: "#8b949e",
-      secondaryColor: "#161b22",
-      tertiaryColor: "#0d1117",
-      edgeLabelBackground: "#1a1f27"
-    }
-  });
-</script>
-<script src="app.js"></script>
+    <section class="section" id="how">
+      <div class="container">
+        <h2>איך זה עובד</h2>
+        <p class="lead">תהליך פשוט וברור שמאפשר לך להתחיל לעבוד בלי להסתבך.</p>
+        <div class="steps">
+          <article class="step">
+            <div class="n">1</div>
+            <h4>נרשמים</h4>
+            <p>פותחים חשבון ומזינים פרטים בסיסיים בכמה דקות.</p>
+          </article>
+          <article class="step">
+            <div class="n">2</div>
+            <h4>מאמתים זהות</h4>
+            <p>עוברים תהליך אימות קצר לשמירה על אמון ובטיחות.</p>
+          </article>
+          <article class="step">
+            <div class="n">3</div>
+            <h4>מקבלים התאמה</h4>
+            <p>המערכת מחברת בין בקשות לשירות המתאים בזמן הנכון.</p>
+          </article>
+          <article class="step">
+            <div class="n">4</div>
+            <h4>מתחילים לעבוד</h4>
+            <p>מנהלים פעילות שוטפת דרך לוח בקרה ברור ונוח.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="container">
+        <h2>שאלות נפוצות</h2>
+        <div class="faq">
+          <article class="faq-item">
+            <h4>צריך ידע טכני כדי להשתמש במערכת?</h4>
+            <p>לא. המערכת נבנתה למשתמשים לא טכניים עם שפה פשוטה ותהליך מודרך.</p>
+          </article>
+          <article class="faq-item">
+            <h4>כמה זמן לוקח להתחיל?</h4>
+            <p>ברוב המקרים אפשר להשלים הרשמה בסיסית ולהתחיל בפחות מ-10 דקות.</p>
+          </article>
+          <article class="faq-item">
+            <h4>אפשר לקבל תמיכה אם נתקעים?</h4>
+            <p>כן. יש תמיכה והכוונה לאורך תהליך ההצטרפות והעבודה השוטפת.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="bottom-cta" id="join">
+      <div class="container">
+        <h2>רוצה להצטרף ל-TAZO?</h2>
+        <p>נשמח להעלות אותך לאוויר במהירות עם תהליך פשוט וברור.</p>
+        <a class="btn btn-primary" href="/deep-dive.html">כניסה למערכת</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container foot">
+      <span>TAZO Platform - דף נחיתה למשתמשים</span>
+      <a href="/deep-dive.html">לצפייה במידע טכני</a>
+    </div>
+  </footer>
 </body>
 </html>
