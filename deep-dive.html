@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tazo Architecture - Deep Dive</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header>
+  <h1 data-he="Tazo Deep Dive טכני" data-en="Tazo Technical Deep Dive">Tazo Deep Dive טכני</h1>
+  <p data-he="עמוד טכני: APIs, אבטחה, דאטה ותפעול" data-en="Technical page: APIs, security, data, and operations">עמוד טכני: APIs, אבטחה, דאטה ותפעול</p>
+</header>
+
+<div class="top-actions">
+  <nav class="page-links">
+    <a class="pill" href="index.html" data-he="Overview" data-en="Overview">Overview</a>
+    <a class="pill active" href="deep-dive.html" data-he="Deep Dive" data-en="Deep Dive">Deep Dive</a>
+  </nav>
+  <nav class="anchor-menu">
+    <a class="pill" href="#apis" data-he="API Map" data-en="API Map">API Map</a>
+    <a class="pill" href="#security" data-he="אבטחה" data-en="Security">אבטחה</a>
+    <a class="pill" href="#data" data-he="Data Model" data-en="Data Model">Data Model</a>
+    <a class="pill" href="#ops" data-he="תפעול" data-en="Operations">תפעול</a>
+  </nav>
+  <button class="btn" id="langToggle">EN</button>
+</div>
+
+<div class="tools-row">
+  <input
+    id="freeSearch"
+    class="search"
+    data-he-placeholder="חיפוש חופשי בכל המודולים הטכניים (למשל: jwt, webhook, retry, migration)"
+    data-en-placeholder="Search across technical modules (e.g. jwt, webhook, retry, migration)"
+    placeholder="חיפוש חופשי בכל המודולים הטכניים (למשל: jwt, webhook, retry, migration)"
+  />
+  <button class="btn" id="clearSearch" data-he="נקה חיפוש" data-en="Clear Search">נקה חיפוש</button>
+  <a class="btn" href="index.html" data-he="חזרה ל-Overview" data-en="Back to Overview">חזרה ל-Overview</a>
+</div>
+
+<section class="category-strip">
+  <div class="category-buttons" id="categoryButtons">
+    <button class="cat-btn active" data-category="all"><span class="label" data-he="הכל" data-en="All">הכל</span> <span class="count" data-count-for="all"></span></button>
+    <button class="cat-btn" data-category="identity"><span class="label" data-he="זהויות ו-KYC" data-en="Identity & KYC">זהויות ו-KYC</span> <span class="count" data-count-for="identity"></span></button>
+    <button class="cat-btn" data-category="mobility"><span class="label" data-he="תחבורה ו-Dispatch" data-en="Mobility & Dispatch">תחבורה ו-Dispatch</span> <span class="count" data-count-for="mobility"></span></button>
+    <button class="cat-btn" data-category="commerce"><span class="label" data-he="עסקים ו-AI" data-en="Commerce & AI">עסקים ו-AI</span> <span class="count" data-count-for="commerce"></span></button>
+    <button class="cat-btn" data-category="wallet"><span class="label" data-he="ארנק ותשלומים" data-en="Wallet & Payments">ארנק ותשלומים</span> <span class="count" data-count-for="wallet"></span></button>
+    <button class="cat-btn" data-category="messaging"><span class="label" data-he="WhatsApp והודעות" data-en="WhatsApp & Messaging">WhatsApp והודעות</span> <span class="count" data-count-for="messaging"></span></button>
+    <button class="cat-btn" data-category="infra"><span class="label" data-he="תשתיות ואבטחה" data-en="Infra & Security">תשתיות ואבטחה</span> <span class="count" data-count-for="infra"></span></button>
+  </div>
+</section>
+
+<section id="apis" class="section">
+  <h2 data-he="API Map" data-en="API Map">API Map</h2>
+  <div class="deep-grid">
+    <article class="deep-card" data-search-item data-search-text="odin auth magic-link otp pwa" data-categories="identity,messaging">
+      <h3 data-he="Odin API" data-en="Odin API">Odin API</h3>
+      <p data-he="שער זהויות ואימות עם מודולי auth, events, onboarding ו-magic-link." data-en="Identity gateway with auth, events, onboarding, and magic-link modules.">שער זהויות ואימות עם מודולי auth, events, onboarding ו-magic-link.</p>
+      <ul>
+        <li>POST /auth/login</li>
+        <li>POST /webhooks/odin</li>
+        <li>POST /magic-link/send</li>
+      </ul>
+    </article>
+    <article class="deep-card" data-search-item data-search-text="rideos rides rideshare ratings tracking" data-categories="mobility">
+      <h3 data-he="RideOS API" data-en="RideOS API">RideOS API</h3>
+      <p data-he="ניהול נסיעות, נהגים ונוסעים, מעקב ומערך דירוגים." data-en="Trips, drivers, passengers, tracking, and rating workflows.">ניהול נסיעות, נהגים ונוסעים, מעקב ומערך דירוגים.</p>
+      <ul>
+        <li>POST /rides/create</li>
+        <li>POST /rides/assign</li>
+        <li>GET /tracking/live</li>
+      </ul>
+    </article>
+    <article class="deep-card" data-search-item data-search-text="localbiz ai site generation business agents" data-categories="commerce">
+      <h3 data-he="LocalBiz API" data-en="LocalBiz API">LocalBiz API</h3>
+      <p data-he="אוטומציית הקמת אתרים לעסקים כולל יצירת תוכן וחיבור סליקה." data-en="Business site automation with content generation and payment integrations.">אוטומציית הקמת אתרים לעסקים כולל יצירת תוכן וחיבור סליקה.</p>
+      <ul>
+        <li>POST /sites/generate</li>
+        <li>POST /ai/content</li>
+        <li>POST /payments/link</li>
+      </ul>
+    </article>
+    <article class="deep-card" data-search-item data-search-text="sync dispatch websocket assignment notifications" data-categories="mobility,messaging">
+      <h3 data-he="Sync Dispatch API" data-en="Sync Dispatch API">Sync Dispatch API</h3>
+      <p data-he="ניהול הקצאות בזמן אמת עם אירועי נהגים והתראות." data-en="Real-time assignment service with driver events and notifications.">ניהול הקצאות בזמן אמת עם אירועי נהגים והתראות.</p>
+      <ul>
+        <li>POST /dispatch/event</li>
+        <li>POST /drivers/notify</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="security" class="section">
+  <h2 data-he="מודל אבטחה" data-en="Security Model">מודל אבטחה</h2>
+  <div class="deep-grid">
+    <article class="deep-card" data-search-item data-search-text="jwt rs256 public key bearer" data-categories="identity,infra">
+      <h3 data-he="JWT Federation" data-en="JWT Federation">JWT Federation</h3>
+      <p data-he="Odin מנפיק RS256 וכל השירותים מאמתים חתימה עם מפתח ציבורי." data-en="Odin issues RS256 tokens and downstream services validate with public key.">Odin מנפיק RS256 וכל השירותים מאמתים חתימה עם מפתח ציבורי.</p>
+      <ul><li>Short TTL Access Tokens</li><li>Scope-based Authorization</li></ul>
+    </article>
+    <article class="deep-card" data-search-item data-search-text="internal key vault key header" data-categories="wallet,infra">
+      <h3 data-he="Service-to-Service Keys" data-en="Service-to-Service Keys">Service-to-Service Keys</h3>
+      <p data-he="קריאות פנימיות מוגנות ב-X-Internal-Key ו-X-Vault-Internal-Key." data-en="Internal traffic protected by X-Internal-Key and X-Vault-Internal-Key.">קריאות פנימיות מוגנות ב-X-Internal-Key ו-X-Vault-Internal-Key.</p>
+      <ul><li>Key Rotation</li><li>IP Allow Lists</li></ul>
+    </article>
+    <article class="deep-card" data-search-item data-search-text="webhook signature verification replay protection" data-categories="messaging,infra">
+      <h3 data-he="Webhook Hardening" data-en="Webhook Hardening">Webhook Hardening</h3>
+      <p data-he="אימות חתימה, מניעת replay וחסימת payload חריג." data-en="Signature validation, replay prevention, and payload anomaly checks.">אימות חתימה, מניעת replay וחסימת payload חריג.</p>
+      <ul><li>HMAC Verification</li><li>Nonce + Timestamp</li></ul>
+    </article>
+  </div>
+</section>
+
+<section id="data" class="section">
+  <h2 data-he="Data & Migrations" data-en="Data & Migrations">Data & Migrations</h2>
+  <div class="deep-grid">
+    <article class="deep-card" data-search-item data-search-text="postgres users accounts kyc applications" data-categories="identity,wallet">
+      <h3 data-he="PostgreSQL Domains" data-en="PostgreSQL Domains">PostgreSQL Domains</h3>
+      <p data-he="טבלאות זהות, KYC, ארנקים ותנועות מחולקות לפי שירותים." data-en="Identity, KYC, wallet, and transaction tables separated by service boundaries.">טבלאות זהות, KYC, ארנקים ותנועות מחולקות לפי שירותים.</p>
+      <ul><li>Alembic revision history</li><li>Backward-compatible schema changes</li></ul>
+    </article>
+    <article class="deep-card" data-search-item data-search-text="redis sessions cache rate limit" data-categories="identity,infra">
+      <h3 data-he="Redis Strategy" data-en="Redis Strategy">Redis Strategy</h3>
+      <p data-he="ניהול סשנים, cache חם ו-rate-limit לפי endpoint." data-en="Session management, hot cache, and endpoint-level rate limiting.">ניהול סשנים, cache חם ו-rate-limit לפי endpoint.</p>
+      <ul><li>Session TTL Policies</li><li>Key namespace isolation</li></ul>
+    </article>
+    <article class="deep-card" data-search-item data-search-text="mongodb events assignments audit" data-categories="mobility,commerce">
+      <h3 data-he="Mongo Event Log" data-en="Mongo Event Log">Mongo Event Log</h3>
+      <p data-he="שכבת אירועים ל-dispatch, audit וניתוח SLA." data-en="Event layer for dispatch, audit trail, and SLA analytics.">שכבת אירועים ל-dispatch, audit וניתוח SLA.</p>
+      <ul><li>Assignment snapshots</li><li>Outbox pattern</li></ul>
+    </article>
+  </div>
+</section>
+
+<section id="ops" class="section">
+  <h2 data-he="תפעול ואמינות" data-en="Operations and Reliability">תפעול ואמינות</h2>
+  <div class="deep-grid">
+    <article class="deep-card" data-search-item data-search-text="retry worker dead letter queue" data-categories="wallet,infra">
+      <h3 data-he="Retries" data-en="Retries">Retries</h3>
+      <p data-he="Worker ייעודי ל-retry על יצירת ארנקים וקריאות חוצות שירותים." data-en="Dedicated worker retries wallet creation and cross-service calls.">Worker ייעודי ל-retry על יצירת ארנקים וקריאות חוצות שירותים.</p>
+      <ul><li>Exponential backoff</li><li>Dead-letter capture</li></ul>
+    </article>
+    <article class="deep-card" data-search-item data-search-text="observability logging tracing metrics" data-categories="infra">
+      <h3 data-he="Observability" data-en="Observability">Observability</h3>
+      <p data-he="לוגים מובנים, trace-id, ומדדי latency/error לכל API." data-en="Structured logs, trace-ids, and latency/error metrics per API.">לוגים מובנים, trace-id, ומדדי latency/error לכל API.</p>
+      <ul><li>Request correlation</li><li>Webhook failure dashboards</li></ul>
+    </article>
+    <article class="deep-card" data-search-item data-search-text="whatsapp fallback twilio" data-categories="messaging">
+      <h3 data-he="Messaging Fallback" data-en="Messaging Fallback">Messaging Fallback</h3>
+      <p data-he="אם Meta נכשל, המערכת עוברת אוטומטית ל-Twilio." data-en="If Meta fails, the system automatically routes to Twilio.">אם Meta נכשל, המערכת עוברת אוטומטית ל-Twilio.</p>
+      <ul><li>Health probe routing</li><li>Fallback alerting</li></ul>
+    </article>
+  </div>
+</section>
+
+<footer>
+  <span data-he="Deep Dive | June 2026 | Tazo Architecture" data-en="Deep Dive | June 2026 | Tazo Architecture">Deep Dive | June 2026 | Tazo Architecture</span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
